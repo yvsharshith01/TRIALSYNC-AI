@@ -4,9 +4,9 @@
   "type": "module",
   "main": ".nitro/output/server/index.mjs",
  "scripts": {
-    "build": "npx nitro build",
-    "start": "node .nitro/output/server/index.mjs",
-    "dev": "nitro dev"
+    "build": "npx nitrostack build",
+    "start": "npx nitrostack start",
+    "dev": "npx nitrostack dev"
   },
   "dependencies": {
     "@modelcontextprotocol/ext-apps": ">=0.1.0",
