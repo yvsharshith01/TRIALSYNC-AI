@@ -5,9 +5,9 @@
   "description": "TrialSync AI - Clinical Trial Discovery & Doctor Copilot MCP Platform",
   "main": ".nitro/output/server/index.mjs",
   "scripts": {
-    "build": "npx @nitrostack/cli build",
-    "start": "npx @nitrostack/cli start",
-    "dev": "npx @nitrostack/cli dev"
+    "build": "npx nitro build",
+    "start": "node .nitro/output/server/index.mjs",
+    "dev": "nitro dev"
   },
   "dependencies": {
     "@modelcontextprotocol/ext-apps": ">=0.1.0",
@@ -18,6 +18,7 @@
     "dotenv": "^16.6.1",
     "express": "^5.2.1",
     "groq-sdk": "^1.4.0",
+    "nitro": "^2.11.2",
     "zod": "^3.22.4"
   }
 }
