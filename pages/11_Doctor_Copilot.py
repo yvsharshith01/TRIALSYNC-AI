@@ -1,60 +1,46 @@
 import streamlit as st
-import requests
-from utils import ui, auth
+from utils.mcp_client import ask_copilot_mcp
 
-# Native project setup: renders dark sidebar, logo, user profile, and patient viewer
-ui.set_page("Doctor Copilot")
-auth.require_role("doctor")
+st.set_page_config(page_title="Doctor AI Copilot", page_icon="🩺", layout="wide")
 
-ui.page_header(
-    "message-square", 
-    "Doctor AI Copilot", 
-    "Ask questions about trial eligibility, patient metrics, or protocol details.", 
-    eyebrow="Step 10 · Copilot"
-)
+st.markdown("### STEP 10 · COPILOT")
+st.title("Doctor AI Copilot")
+st.caption("Ask questions about trial eligibility, patient metrics, or protocol details.")
 
-selected_patient = st.session_state.get("selected_patient", {})
-patient_name = selected_patient.get("name", "Jane Doe")
-patient_id = selected_patient.get("id", "P-101")
+# Sidebar patient context
+selected_patient = st.sidebar.selectbox("Viewing Patient:", ["P-101 (Jane Doe)", "P-102 (John Smith)"], index=0)
+patient_id = selected_patient.split(" ")[0]
 
-if "copilot_messages" not in st.session_state or st.session_state.get("copilot_patient_id") != patient_id:
-    st.session_state.copilot_patient_id = patient_id
+# Initialize chat session memory
+if "copilot_messages" not in st.session_state:
     st.session_state.copilot_messages = [
         {
             "role": "assistant",
-            "content": f"Hello Doctor! I am your AI Copilot for **{patient_name}** (`{patient_id}`). How can I assist you with this trial today?"
+            "content": f"Hello Doctor! I am your AI Copilot for **Jane Doe** ({patient_id}). How can I assist you with this trial today?"
         }
     ]
 
-for msg in st.session_state.copilot_messages:
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
+# Display historical messages
+for message in st.session_state.copilot_messages:
+    with st.chat_message(message["role"]):
+        st.write(message["content"])
 
+# Process new user prompt
 if prompt := st.chat_input("Ask about eligibility, protocols, or adherence..."):
+    # Render user prompt
     st.session_state.copilot_messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
-        st.markdown(prompt)
+        st.write(prompt)
 
+    # Generate Copilot response
+    with st.spinner("Analyzing protocol and clinical criteria..."):
+        response = ask_copilot_mcp(prompt, patient_id=patient_id)
+
+    # Render Copilot response
+    st.session_state.copilot_messages.append({"role": "assistant", "content": response})
     with st.chat_message("assistant"):
-        with st.spinner("Analyzing protocol & patient record..."):
-            try:
-                res = requests.post(
-                    "http://localhost:3001/ask_copilot",
-                    json={"prompt": prompt, "patientId": patient_id},
-                    timeout=15
-                )
-                if res.status_code == 200:
-                    data = res.json()
-                    reply = data.get("response") or data.get("text") or "Analysis complete."
-                else:
-                    reply = " Server error while generating response."
-            except Exception as e:
-                reply = f" Connection error: {e}"
+        st.write(response)
 
-            st.markdown(reply)
-            st.session_state.copilot_messages.append({"role": "assistant", "content": reply})
-
-st.divider()
-
+st.markdown("<br>", unsafe_allow_html=True)
 if st.button("Generate Final Clinical Report →", type="primary"):
-    st.switch_page("pages/13_Reports.py")
+    st.switch_page("pages/13_Reports.py") if hasattr(st, "switch_page") else None
