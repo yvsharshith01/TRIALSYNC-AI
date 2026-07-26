@@ -5,11 +5,10 @@
   "type": "module",
   "description": "TrialSync AI - Clinical Trial Discovery & Doctor Copilot MCP Platform",
   "main": "dist/index.js",
-  "scripts": {
-    "build": "nitro build",
+ "scripts": {
+    "build": "npx nitro build",
     "start": "node .nitro/output/server/index.mjs",
     "dev": "nitro dev"
-  
   },
   "dependencies": {
     "@modelcontextprotocol/ext-apps": ">=0.1.0",
