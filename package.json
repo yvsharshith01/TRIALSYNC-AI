@@ -2,11 +2,12 @@
   "name": "trialsync-ai",
   "version": "1.0.0",
   "type": "module",
+  "description": "TrialSync AI - Clinical Trial Discovery & Doctor Copilot MCP Platform",
   "main": ".nitro/output/server/index.mjs",
- "scripts": {
-    "build": "npx nitrostack build",
-    "start": "npx nitrostack start",
-    "dev": "npx nitrostack dev"
+  "scripts": {
+    "build": "nitrostack build",
+    "start": "nitrostack start",
+    "dev": "nitrostack dev"
   },
   "dependencies": {
     "@modelcontextprotocol/ext-apps": ">=0.1.0",
@@ -18,17 +19,5 @@
     "express": "^5.2.1",
     "groq-sdk": "^1.4.0",
     "zod": "^3.22.4"
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^4.17.21",
-    "@types/node": "^20.11.0",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.19.0",
-    "typescript": "^5.3.3"
-  },
-  "author": "Harshith Yalamarthi",
-  "nitro": {
-    "skipInstall": false
   }
 }
